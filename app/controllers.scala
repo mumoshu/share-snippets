@@ -12,12 +12,18 @@ object Application extends Controller {
 
 object Posts extends Controller {
 
-  def index = Template
+  def index {
+    val post = new Post(new Lang("lang"), new Topic("topic"), "code")
+    Template
+  }
 
   def create(lang: Lang, topic: Topic, code: String) {
-    new Post(lang, topic, code).validateAndSave
-    recent
+    val post = new Post(lang, topic, code)
+    post.validateAndSave
+    show(post)
   }
+
+  def show(post: Post) = Template
 
   def recent = Template
 }
