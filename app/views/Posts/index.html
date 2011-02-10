@@ -1,12 +1,12 @@
 #{extends 'main.html' /}
 #{set title:'今日のお題' /}
 
-<div>${post.lang.name}</div>
-<div>${post.topic.description}</div>
+<div>${lan.name}</div>
+<div>${topic.description}</div>
 
 <form method="post" action="@{create}">
-    <input type="hidden" value="${post.lang.id}" />
-    <input type="hidden" value="${post.topic.id}" />
-    <textarea name="Post.code"></textarea>
+    <input type="hidden" name="lang.id" value="${lan.id}" />
+    <input type="hidden" name="topic.id" value="${topic.id}" />
+    <textarea name="code"></textarea>
     <input type="submit" value="Done" />
 </form>
