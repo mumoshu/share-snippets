@@ -15,5 +15,4 @@ GET     /public/                                staticDir:public
 *       /{controller}/{action}                  {controller}.{action}
 
 # Catch all requests to index pages
-*       /{controller}                           {controller}.index
-*       /{controller}/                          {controller}.index
+*       /{controller}/?                         {controller}.index
