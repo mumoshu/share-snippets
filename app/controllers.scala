@@ -30,3 +30,9 @@ object Posts extends Controller {
 
   def recent = Template
 }
+
+package admin {
+  object Langs extends Controller with CRUDFor[Lang]
+  object Topics extends Controller with CRUDFor[Topic]
+  //object Posts extends Controller with CRUDFor[Post]
+}
