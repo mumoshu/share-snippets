@@ -8,6 +8,14 @@ import models._
 object Application extends Controller {
     
   def index = Posts.index
+
+  def login = Template
+
+  def authenticate(userId: Long) = {
+    session.put("user.id", userId)
+    renderArgs += "user" -> Users.findById(userId).getOrNotFound
+    Action(index)
+  }
 }
 
 object Usages extends Controller {
@@ -19,7 +27,7 @@ object Usages extends Controller {
   def bind_post(post: Post) = if (post != null) "id=%d, code=%s".format(post.id, post.code)
 }
 
-object Posts extends Controller {
+object Posts extends Controller with Secured {
 
   def index = {
     val lan = new Lang("lang")
@@ -37,7 +45,22 @@ object Posts extends Controller {
 
   def show(post: Post) = Template(post)
 
+  def tag(post: Post, tagName: String) = {
+    val user = renderArgs.get("user")
+
+    user.tagPost(post, tagName)
+  }
+
   def recent = Template
+}
+
+trait Secure extends Controller {
+  @Before def ensureLogin = {
+    session("user.id") map(_.toLong) match {
+      case Some(userId: Long) => renderArgs += "user" -> User.findById(userId).getOrNotFound; Continue
+      case None => Action(Application.login)
+    }
+  }
 }
 
 package admin {
