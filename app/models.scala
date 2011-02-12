@@ -51,7 +51,7 @@ case class Tag(
 
 object Tag extends QueryOn[Tag] {
   def findByNameOrCreate(name: String) = {
-    find("byName", name).getOrElse(new Tag(name).save)
+    find("byName", name).first.getOrElse(new Tag(name).save)
   }
 }
 
@@ -67,7 +67,7 @@ case class User(
   def tagPost(post: Post, tagName: String) = {
     val tag = Tag.findByNameOrCreate(tagName)
 
-    Tagging.createIfNotFound(user, post, tag)
+    Tagging.createIfNotFound(this, post, tag)
   }
 }
 
@@ -83,11 +83,11 @@ case class Tagging(
 
   @Required
   var tag: Tag
-)
+) extends Model
 
 object Tagging extends QueryOn[Tagging] {
   def createIfNotFound(user: User, post: Post, tag: Tag) = {
-    find("byUserAndPostAndTag", user, post, tag).getOrElse(
+    find("byUserAndPostAndTag", user, post, tag).first.getOrElse(
       new Tagging(user, post, tag).save
     )
   }

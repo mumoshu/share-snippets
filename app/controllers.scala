@@ -13,7 +13,7 @@ object Application extends Controller {
 
   def authenticate(userId: Long) = {
     session.put("user.id", userId)
-    renderArgs += "user" -> Users.findById(userId).getOrNotFound
+    renderArgs += "user" -> User.findById(userId).getOrNotFound
     Action(index)
   }
 }
@@ -46,7 +46,7 @@ object Posts extends Controller with Secured {
   def show(post: Post) = Template(post)
 
   def tag(post: Post, tagName: String) = {
-    val user = renderArgs.get("user")
+    val user = renderArgs.get("user", classOf[User])
 
     user.tagPost(post, tagName)
   }
