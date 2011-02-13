@@ -14,7 +14,14 @@ object Application extends Controller {
   def authenticate(userId: Long) = {
     session.put("user.id", userId)
     renderArgs += "user" -> User.findById(userId).getOrNotFound
-    Action(index)
+    Action(Posts.index)
+  }
+
+  def signup(userName: String) = {
+    val user = new User(userName).save
+    session.put("user.id", user.id)
+    renderArgs += "user" -> user
+    Action(Posts.index)
   }
 }
 
@@ -27,7 +34,7 @@ object Usages extends Controller {
   def bind_post(post: Post) = if (post != null) "id=%d, code=%s".format(post.id, post.code)
 }
 
-object Posts extends Controller with Secured {
+object Posts extends Controller with Secure {
 
   def index = {
     val lan = new Lang("lang")
@@ -56,9 +63,18 @@ object Posts extends Controller with Secured {
 
 trait Secure extends Controller {
   @Before def ensureLogin = {
-    session("user.id") map(_.toLong) match {
-      case Some(userId: Long) => renderArgs += "user" -> User.findById(userId).getOrNotFound; Continue
-      case None => Action(Application.login)
+    Logger.error("hoge")
+    session("user.id") map(_.toLong) flatMap(User.findById(_)) match {
+      case Some(user: User) => {
+        Logger.debug("user.id: %s", user.id.toString)
+        renderArgs += "user" -> user
+        Continue
+      }
+      case None => {
+        Logger.debug("redirecting to Application.index")
+        flash.put("message", "Please login.")
+        Action(Application.login)
+      }
     }
   }
 }
@@ -66,5 +82,6 @@ trait Secure extends Controller {
 package admin {
   object Langs extends Controller with CRUDFor[Lang]
   object Topics extends Controller with CRUDFor[Topic]
-  //object Posts extends Controller with CRUDFor[Post]
+  object Posts extends Controller with CRUDFor[Post]
+  object Users extends Controller with CRUDFor[User]
 }

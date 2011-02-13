@@ -11,6 +11,9 @@
         #{get 'moreScripts' /}
     </head>
     <body>
+        <div class="flash_messages">
+            <div>${flash.get("message")}</div>
+        </div>
         #{doLayout /}
     </body>
 </html>

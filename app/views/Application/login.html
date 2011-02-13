@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'Login' /}
+
+<form method="post" action="@{authenticate}">
+    <input type="text" name="userId"></input>
+    <input type="submit" value="ログイン" />
+</form>
+
+<form method="post" action="@{signup}">
+    <input type="text" name="userName"></input>
+    <input type="submit" value="Signup" />
+</form>
