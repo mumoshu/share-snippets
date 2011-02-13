@@ -2,6 +2,7 @@ package controllers
 
 import play._
 import play.mvc._
+import play.cache.Cache
 
 import models._
 
@@ -44,13 +45,24 @@ object Posts extends Controller with Secure {
     Template(lan, topic)
   }
 
-  def create(lang: Lang, topic: Topic, code: String) = {
-    val post = new Post(lang, topic, code)
+  def create(language: String, tags: String, code: String) = {
+    val lang = Lang.findByNameOrCreate(language)
+    val post = new Post(lang, null, code)
     post.validateAndSave
-    Action(show(post))
+    tags.split(" ").foreach(user.tagPost(post, _))
+    Cache.add("Post[" + post.id + "]", post)
+    Action(show(post.id))
   }
 
-  def show(post: Post) = Template(post)
+  def show(postId: Long) = {
+    val post: Post = Cache.get("Post[" + postId + "]").getOrElse(Post.findById(postId).get)
+
+    if (post == null)
+      NotFound("post not found.")
+
+    Template(post)
+  }
+
 
   def tag(post: Post, tagName: String) = {
     val user = renderArgs.get("user", classOf[User])
@@ -62,6 +74,8 @@ object Posts extends Controller with Secure {
 }
 
 trait Secure extends Controller {
+  def user: User = renderArgs.get("user").asInstanceOf[User]
+
   @Before def ensureLogin = {
     Logger.error("hoge")
     session("user.id") map(_.toLong) flatMap(User.findById(_)) match {

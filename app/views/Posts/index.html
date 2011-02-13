@@ -1,12 +1,13 @@
 #{extends 'main.html' /}
 #{set title:'今日のお題' /}
 
-<div>${lan.name}</div>
-<div>${topic.description}</div>
-
 <form method="post" action="@{create}">
-    <input type="hidden" name="lang.id" value="${lan.id}" />
-    <input type="hidden" name="topic.id" value="${topic.id}" />
+    <label for="language">Programming Language: </label>
+    <input id="language" type="text" name="language" />
+    <br />
+    <label for="tags">タグ</label>
+    <input id="tags" type="text" name="tags" />
     <textarea name="code"></textarea>
-    <input type="submit" value="Done" />
+
+    <input type="submit" value="Submit" />
 </form>

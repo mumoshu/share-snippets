@@ -32,7 +32,11 @@ case class Lang(
 ) extends Model {
 }
 
-object Lang extends QueryOn[Lang]
+object Lang extends QueryOn[Lang] {
+  def findByNameOrCreate(name: String) = {
+    find("byName", name).first.getOrElse(new Lang(name).save)
+  }
+}
 
 @Entity
 case class Topic(
