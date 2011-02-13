@@ -20,7 +20,7 @@ case class Post(
 
 ) extends Model {
 
-  def taggings = Tagging.find("byPost", this)
+  def taggings = Tagging.find("byPost", this).fetch
 }
 
 object Post extends QueryOn[Post]
