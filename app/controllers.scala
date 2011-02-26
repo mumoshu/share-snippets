@@ -42,7 +42,8 @@ object Posts extends Controller with Secure {
     lan.save
     val topic = new Topic("topic")
     topic.save
-    Template(lan, topic)
+    val posts = Post.findAll
+    Template(lan, topic, posts)
   }
 
   def create(language: String, tags: String, code: String) = {
@@ -63,6 +64,25 @@ object Posts extends Controller with Secure {
     Template(post)
   }
 
+  def answer(postId: Long, answer: String) = {
+    val post: Post = Cache.get("Post[" + postId + "]").getOrElse(Post.findById(postId).get)
+
+    if (post == null)
+      NotFound("post not found.")
+
+    val consumedPost = new ConsumedPost
+
+    consumedPost.post = post
+    consumedPost.answer = answer
+
+    consumedPost.save
+  }
+
+  def answers = {
+    val answers = ConsumedPost.findAll
+
+    Template(answers)
+  }
 
   def tag(post: Post, tagName: String) = {
     val user = renderArgs.get("user", classOf[User])
