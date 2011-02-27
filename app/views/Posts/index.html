@@ -2,12 +2,12 @@
 #{set title:'今日のお題' /}
 
 <form method="post" action="@{create}">
-    <label for="language">Programming Language: </label>
-    <input id="language" type="text" name="language" />
-    <br />
     <label for="tags">タグ</label>
-    <input id="tags" type="text" name="tags" />
-    <textarea name="code"></textarea>
+    <input id="tags" type="text" name="tags" value="${tags}"/>
+    <label for="code">お題</label>
+    <textarea id="code" name="code"></textarea>
+    <label for="choice">選択肢(正答は先頭にアスタリスク(*)をつけてください)</label>
+    <textarea id="choice" name="choice"></textarea>
 
     <input type="submit" value="Submit" />
 </form>

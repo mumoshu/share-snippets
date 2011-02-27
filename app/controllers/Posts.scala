@@ -7,6 +7,8 @@ import models._
 object Posts extends Controller with Secure {
 
   def index = {
+    val post = Post.random
+    val tags = post.taggings.map(_.tag)
     Template
   }
 
