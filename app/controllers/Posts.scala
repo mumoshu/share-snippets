@@ -7,21 +7,24 @@ import models._
 object Posts extends Controller with Secure {
 
   def index = {
-    val lan = new Lang("lang")
-    lan.save
-    val topic = new Topic("topic")
-    topic.save
-    val posts = Post.findAll
-    Template(lan, topic, posts)
+    Template
   }
 
-  def create(language: String, tags: String, code: String) = {
-    val lang = Lang.findByNameOrCreate(language)
-    val post = new Post(lang, null, code)
-    post.validateAndSave
-    tags.split(" ").foreach(user.tagPost(post, _))
-    Cache.add("Post[" + post.id + "]", post)
-    Action(show(post.id))
+  def create(tags: String, code: String, choice: String) = {
+    val post = new Post(code, choice)
+
+    if (post.validateAndSave) {
+      tags.split(" ").foreach(user.tagPost(post, _))
+      Cache.add("Post[" + post.id + "]", post)
+      Action(show(post.id))
+    } else {
+      if (request.isAjax)
+        ERROR
+      else {
+        flash.put("error_message", "validation fail")
+        Action(index)
+      }
+    }
   }
 
   def show(postId: Long) = {
@@ -36,21 +39,16 @@ object Posts extends Controller with Secure {
   def answer(postId: Long, answer: String) = {
     val post: Post = Cache.get("Post[" + postId + "]").getOrElse(Post.findById(postId).get)
 
-    if (post == null)
+    if (post == null) {
       NotFound("post not found.")
-
-    val consumedPost = new ConsumedPost
-
-    consumedPost.post = post
-    consumedPost.answer = answer
-
-    consumedPost.save
-  }
-
-  def answers = {
-    val answers = ConsumedPost.findAll
-
-    Template(answers)
+    } else {
+      if (post.answerIsCorrect(answer)) {
+        flash.put("message", "Good!")
+      } else {
+        flash.put("Not good!: correct answer was: " + post.correctAnswers.mkString(", "))
+      }
+      Action(show(Post.random.id))
+    }
   }
 
   def tag(post: Post, tagName: String) = {
