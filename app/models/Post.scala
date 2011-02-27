@@ -18,4 +18,6 @@ case class Post(
   def answerIsCorrect(answer: String) = correctAnswers.contains(answer.trim)
 }
 
-object Post extends QueryOn[Post]
+object Post extends QueryOn[Post] {
+  def random = Post.findById((Math.random * count).floor)
+}
