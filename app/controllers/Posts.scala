@@ -4,6 +4,13 @@ import play.mvc._
 
 import models._
 
+object Users extends Controller with Secure {
+
+  def posts = {
+    Template("posts" -> Post.find("byUser", renderArgs.get("user", classOf[User]))
+  }
+}
+
 object Posts extends Controller with Secure {
 
   def index = {
@@ -29,13 +36,34 @@ object Posts extends Controller with Secure {
     }
   }
 
+  def update(postId: Long, tags: String, code: String, choice: String) = {
+    val post = getPostOrNotFound(postId)
+
+    post.code = code
+    post.choice = choice
+    post.save
+    Action(show(postId))
+  }
+
   def show(postId: Long) = {
+    val post = getPostOrNotFound(postId)
+
+    Template(post)
+  }
+
+  def edit(postId: Long) = {
+    val post = getPostOrNotFound(postId)
+
+    Template(post)
+  }
+
+  private def getPostOrNotFound(postId: Long) = {
     val post: Post = Cache.get("Post[" + postId + "]").getOrElse(Post.findById(postId).get)
 
     if (post == null)
-      NotFound("post not found.")
-
-    Template(post)
+      new NotFound("post not found.")
+    else
+      post
   }
 
   def answer(postId: Long, answer: String) = {
