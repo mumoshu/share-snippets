@@ -19,5 +19,5 @@ case class Post(
 }
 
 object Post extends QueryOn[Post] {
-  def random = Post.findById((Math.random * count).floor)
+  def random: Option[Post] = Post.findById((math.random * count).floor.toLong)
 }

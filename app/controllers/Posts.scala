@@ -1,20 +1,21 @@
 package controllers
 
 import play.mvc._
+import play.cache.Cache
 
 import models._
 
 object Users extends Controller with Secure {
 
   def posts = {
-    Template("posts" -> Post.find("byUser", renderArgs.get("user", classOf[User]))
+    Template("posts" -> Post.find("byUser", renderArgs.get("user", classOf[User])))
   }
 }
 
 object Posts extends Controller with Secure {
 
   def index = {
-    val post = Post.random
+    val post = Post.random.getOrElse(null)
     val tags = post.taggings.map(_.tag)
     Template
   }
@@ -61,7 +62,7 @@ object Posts extends Controller with Secure {
     val post: Post = Cache.get("Post[" + postId + "]").getOrElse(Post.findById(postId).get)
 
     if (post == null)
-      new NotFound("post not found.")
+      throw NotFound("post not found.")
     else
       post
   }
@@ -75,9 +76,9 @@ object Posts extends Controller with Secure {
       if (post.answerIsCorrect(answer)) {
         flash.put("message", "Good!")
       } else {
-        flash.put("Not good!: correct answer was: " + post.correctAnswers.mkString(", "))
+        flash.put("message", "Not good!: correct answer was: " + post.correctAnswers.mkString(", "))
       }
-      Action(show(Post.random.id))
+      Action(show(Post.random.map(_.id).getOrElse(0)))
     }
   }
 
