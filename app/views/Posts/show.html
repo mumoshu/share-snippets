@@ -1,7 +1,16 @@
 #{extends 'main.html' /}
 #{set title:'投稿を見る' /}
 
+<script src="/syntaxhighlighter/scripts/shCore.js"></script>
+<script src="/syntaxhighlighter/scripts/shBrushScala.js"></script>
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCoreDefault.css"></link>
+<script>SyntaxHighlighter.all();</script>
+
 <h2>コード</h2>
-<div>${post.code}</div>
+<div>
+    <pre class="brush: scala;">
+        ${post.code}
+    </pre>
+</div>
 
 <a href="http://twitter.com/home?status=${request.base}${request.url}">twitterで共有</a>

@@ -11,6 +11,8 @@ GET     /                                       Application.index
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
+GET     /syntaxhighlighter/                     staticDir:public/syntaxhighlighter
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
 
