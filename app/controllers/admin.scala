@@ -4,8 +4,8 @@ import play.mvc._
 
 import models._
 
-package object admin {
+package admin {
   object Postss extends Controller with CRUDFor[Post]
-  object Users extends Controller with CRUDFor[User]
-  object Taggings extends Controller with CRUDFor[Tagging]
+  object Userss extends Controller with CRUDFor[User]
+  object Taggingss extends Controller with CRUDFor[Tagging]
 }
