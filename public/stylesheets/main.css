@@ -3,10 +3,29 @@ label {
   padding: 5px;
 }
 
+div.content {
+  text-align: center;
+}
+
+div, pre {
+  text-align: left;
+}
+
 textarea {
   margin: 0px 5px 10px 0px;
 }
 
 input[type=submit] {
   display: block;
+}
+
+textarea#input {
+  margin: 10px 5px 10px 0px;
+}
+div#progress {
+  margin: 10px 0px 0px 0px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 10px;
+  border: 3px solid rgba(200, 200, 200, 0.5);
 }

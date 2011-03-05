@@ -4,13 +4,31 @@
 <script src="/syntaxhighlighter/scripts/shCore.js"></script>
 <script src="/syntaxhighlighter/scripts/shBrushScala.js"></script>
 <link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCoreDefault.css"></link>
+<script src="/public/javascripts/jsdiff.js"></script>
+<script type="text/javascript">
+function updateDiffOnKeyPress() {
+  var $input = $("#input");
+  $input.keyup(function() {
+    $("#progress").html(diffString("${post.code}", $input.val()));
+  });
+}
+$(document).ready(updateDiffOnKeyPress);
+</script>
+
 <script>SyntaxHighlighter.all();</script>
+
+<div class="content">
 
 <h2>コード</h2>
 <div>
-    <pre class="brush: scala;">
-        ${post.code}
-    </pre>
+    <pre class="brush: scala;">${post.code}</pre>
 </div>
 
+<pre id="progress">
+</pre>
+
+<textarea id="input"></textarea>
+
 <a href="http://twitter.com/home?status=${request.base}${request.url}">twitterで共有</a>
+
+</div>
