@@ -1,12 +1,7 @@
 #{extends 'main.html' /}
 #{set title:'投稿を見る' /}
 
-<div>${post.lang.name}</div>
-<div class="tags">
-    #{list items:post.taggings(), as:'tagging' }
-        <div class="tag">${tagging.tag.name} by <span class="user-name">${tagging.user.name}</span></div>
-    #{/list}
-</div>
+<h2>コード</h2>
 <div>${post.code}</div>
 
-<a href="http://twitter.com/login?status=hoge">twitterで共有</a>
+<a href="http://twitter.com/home?status=${request.base}${request.url}">twitterで共有</a>

@@ -16,7 +16,7 @@ object Posts extends Controller with Secure {
 
   def index = {
     val post = Post.random.getOrElse(null)
-    val tags = post.taggings.map(_.tag)
+    val tags = if (post != null) post.taggings.map(_.tag) else "scala"
     Template
   }
 
